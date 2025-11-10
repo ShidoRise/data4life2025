@@ -68,12 +68,12 @@ wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt
 
 #### OSNet Re-ID Model
 ```bash
-# Download from Google Drive or Baidu
+# Download from MODEL_ZOO repo
 # Place in project root directory
 ```
 
 **Option 1: Market-1501 pretrained (recommended)**
-- Download: [osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth](https://drive.google.com/file/d/1LaG1EJpHrxdAxKnSCJ_i0u-nbxSAeiFY/view)
+- Download: [osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO)
 - Size: ~2.2M parameters
 - Performance: 94.8% mAP on Market-1501
 
