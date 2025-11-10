@@ -1,0 +1,25 @@
+# BoT-SORT configuration
+# Adjust parameters based on your video/camera setup
+
+# Detector thresholds
+conf: 0.25
+iou: 0.45
+
+# BoT-SORT thresholds
+track_high_thresh: 0.5
+track_low_thresh: 0.1
+new_track_thresh: 0.7
+
+# Matching & buffer
+match_thresh: 0.8
+track_buffer: 30
+
+# Appearance cues (ReID)
+with_reid: true
+proximity_thresh: 0.5
+appearance_thresh: 0.25
+
+# Other settings
+frame_rate: 30
+fuse_score: true
+mot20: false
