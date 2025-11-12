@@ -253,7 +253,7 @@ def run_extraction(args):
         crops_dir.mkdir(exist_ok=True)
     
     print("=" * 70)
-    print("BƯỚC 3: TRÍCH XUẤT ĐẶC TRƯNG Re-ID")
+    print("STEP 3: Re-ID FEATURE EXTRACTION")
     print("=" * 70)
     print(f"Video:         {args.source}")
     print(f"Tracks file:   {args.tracks}")

@@ -310,7 +310,7 @@ def run_association(args):
     output_dir.mkdir(parents=True, exist_ok=True)
     
     print("=" * 70)
-    print("BƯỚC 4: INTER-CAMERA ASSOCIATION (MTMC)")
+    print("STEP 4: INTER-CAMERA ASSOCIATION (MTMC)")
     print("=" * 70)
     print(f"Method:        {args.method}")
     print(f"Cameras:       {len(args.features)}")

@@ -62,6 +62,7 @@ ENV/
 
 # Output directories
 runs/
+run2s/
 outputs/
 results/
 logs/

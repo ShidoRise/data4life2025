@@ -87,17 +87,17 @@ def validate_files(args):
     if not Path(args.yolo_model).exists():
         raise FileNotFoundError(f"Không tìm thấy YOLO model: {args.yolo_model}")
 
-    # ReID model nếu bật with-reid
+    # ReID model if with-reid enabled
     if args.with_reid and not Path(args.reid_model).exists():
-        raise FileNotFoundError(f"Không tìm thấy ReID model: {args.reid_model}")
+        raise FileNotFoundError(f"ReID model not found: {args.reid_model}")
 
     # Tracker config
     if args.tracker_type == "botsort" and args.tracker_config and not Path(args.tracker_config).exists():
-        print(f"[WARNING] Không tìm thấy tracker config: {args.tracker_config}. Sẽ dùng mặc định của BoxMOT nếu có.")
+        print(f"[WARNING] Tracker config not found: {args.tracker_config}. Will use BoxMOT defaults.")
 
-    # Nguồn vào
+    # Source input
     if args.source != "0" and not Path(args.source).exists():
-        raise FileNotFoundError(f"Không tìm thấy source: {args.source}")
+        raise FileNotFoundError(f"Source not found: {args.source}")
 
 
 def run_tracking(args):
@@ -113,7 +113,7 @@ def run_tracking(args):
     tracks_dir.mkdir(exist_ok=True)
 
     print("=" * 70)
-    print("BƯỚC 2: SINGLE-CAMERA TRACKING - BoT-SORT (BoxMOT)")
+    print("STEP 2: SINGLE-CAMERA TRACKING - BoT-SORT (BoxMOT)")
     print("=" * 70)
     print(f"Source:        {args.source}")
     print(f"YOLO model:    {args.yolo_model}")

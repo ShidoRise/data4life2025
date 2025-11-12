@@ -65,7 +65,18 @@ def find_tracks_file(tracking_dir):
     """Find the MOTChallenge tracks file in tracking output"""
     tracks_dir = Path(tracking_dir)
     
-    # BoxMOT creates tracks in exp/tracks/ or similar
+    # step2_tracking.py saves tracks to: project/name/tracks/
+    # Example: runs/camera1_tracking/tracks/
+    tracks_subdir = tracks_dir / "tracks"
+    
+    if tracks_subdir.exists():
+        # Look for .txt files in tracks/ directory
+        txt_files = list(tracks_subdir.glob("*.txt"))
+        if txt_files:
+            # Return the first .txt file found
+            return txt_files[0]
+    
+    # Fallback: search recursively for any .txt with "tracks" in path
     for tracks_file in tracks_dir.rglob("*.txt"):
         if "tracks" in str(tracks_file):
             return tracks_file
@@ -113,11 +124,20 @@ def main():
         
         # Step 2: Tracking
         if not args.skip_tracking:
+            # Find OSNet model
+            osnet_files = list(Path(".").glob("osnet*.pth"))
+            reid_model = str(osnet_files[0]) if osnet_files else "osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth"
+            
             cmd = [
                 "python", "step2_tracking.py",
                 "--source", video_path,
-                "--output-dir", str(tracking_dir),
-                "--device", args.device
+                "--project", str(output_dir),
+                "--name", f"{cam_name}_tracking",
+                "--device", args.device,
+                "--save-txt",
+                "--tracker-type", "botsort",
+                "--with-reid",
+                "--reid-model", reid_model
             ]
             
             if not run_command(cmd, f"[Step 2] Running tracking for {cam_name}"):
