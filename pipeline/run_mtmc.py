@@ -124,12 +124,13 @@ def main():
         
         # Step 2: Tracking
         if not args.skip_tracking:
-            # Find OSNet model
-            osnet_files = list(Path(".").glob("osnet*.pth"))
+            # Find OSNet model (search in parent directory)
+            script_dir = Path(__file__).parent.parent
+            osnet_files = list(script_dir.glob("osnet*.pth")) + list(script_dir.glob("models/osnet*.pth"))
             reid_model = str(osnet_files[0]) if osnet_files else "osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth"
             
             cmd = [
-                "python", "step2_tracking.py",
+                "python", str(script_dir / "scripts" / "step2_tracking.py"),
                 "--source", video_path,
                 "--project", str(output_dir),
                 "--name", f"{cam_name}_tracking",
@@ -156,8 +157,9 @@ def main():
         
         # Step 3: Feature extraction
         if not args.skip_features:
+            script_dir = Path(__file__).parent.parent
             cmd = [
-                "python", "step3_reid_extraction.py",
+                "python", str(script_dir / "scripts" / "step3_reid_extraction.py"),
                 "--source", video_path,
                 "--tracks", str(tracks_file),
                 "--output-dir", str(features_dir),
@@ -190,9 +192,10 @@ def main():
     print("=" * 70)
     
     mtmc_output = output_dir / "mtmc_results"
+    script_dir = Path(__file__).parent.parent
     
     cmd = [
-        "python", "step4_inter_camera_association.py",
+        "python", str(script_dir / "scripts" / "step4_association.py"),
         "--features"
     ] + feature_files + [
         "--camera-names"

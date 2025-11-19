@@ -50,7 +50,7 @@ pip install -r requirements.txt
 
 Run the environment checker:
 ```bash
-python check_environment.py
+python tools/check_environment.py
 ```
 
 Expected output:
@@ -102,10 +102,16 @@ youtube-dl -f 'bestvideo[height<=1080]' -o test_video.mp4 YOUR_VIDEO_URL
 
 Run a quick test:
 ```bash
-python step2_tracking.py \
-    --source test_video.mp4 \
-    --output-dir runs/test \
-    --device 0
+# Move test video to data folder
+mv test_video.mp4 data/
+
+# Run tracking
+python scripts/step2_tracking.py \
+    --source data/test_video.mp4 \
+    --project outputs \
+    --name test \
+    --device 0 \
+    --save-txt
 ```
 
 ### Step 7: Project Structure Check
@@ -113,6 +119,24 @@ python step2_tracking.py \
 Your directory should look like:
 ```
 mtmc-tracking/
+├── configs/
+│   └── botsort_config.yaml
+├── scripts/
+│   ├── step1_detection.py
+│   ├── step2_tracking.py
+│   ├── step3_reid_extraction.py
+│   └── step4_association.py
+├── pipeline/
+│   └── run_mtmc.py
+├── tools/
+│   └── check_environment.py
+├── docs/
+├── models/
+│   ├── yolov8n.pt
+│   └── osnet_*.pth
+├── data/
+│   └── test_video.mp4
+└── outputs/
 ├── osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth  ← Downloaded
 ├── yolov8n.pt                                                                                      ← Auto or manual
 ├── step1_object_detection.py

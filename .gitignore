@@ -39,39 +39,40 @@ ENV/
 *.ipynb
 
 # Model weights
-*.pt
-*.pth
-*.onnx
-*.engine
-*.weights
-*.pb
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.engine
+models/*.weights
+models/*.pb
 
-# Except the config file
-!botsort_config.yaml
+# Keep models directory but not the weights
+!models/.gitkeep
 
-# Videos and images
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.bmp
+# Videos and images  
+data/*.mp4
+data/*.avi
+data/*.mov
+data/*.mkv
+data/*.jpg
+data/*.jpeg
+data/*.png
+data/*.gif
+data/*.bmp
+
+# Keep data directory structure
+!data/.gitkeep
+!data/README.md
 
 # Output directories
-runs/
-run2s/
 outputs/
+runs/
 results/
 logs/
+run2s/
 
-# Data
-data/
-datasets/
-videos/
-images/
+# Keep outputs directory
+!outputs/.gitkeep
 
 # Temporary files
 *.tmp

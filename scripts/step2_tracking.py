@@ -60,8 +60,8 @@ def parse_args():
     parser.add_argument("--reid-model", type=str,
                         default="osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth",
                         help="Đường dẫn model ReID (OSNet .pth)")
-    parser.add_argument("--tracker-config", type=str, default="botsort_config.yaml",
-                        help="File cấu hình cho BoT-SORT")
+    parser.add_argument("--tracker-config", type=str, default="../configs/botsort_config.yaml",
+                        help="Tracker config file for BoT-SORT")
 
     # Lưu/hiển thị
     parser.add_argument("--project", type=str, default="runs/step2_tracking",

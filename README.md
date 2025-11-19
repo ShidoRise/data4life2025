@@ -59,34 +59,73 @@ pip install -r requirements.txt
 
 ### 4. Download pretrained models
 
-#### YOLOv8 (auto-downloaded on first run)
+Place model weights in the `models/` directory:
+
+#### YOLOv8 Detection Model
 ```bash
-# Will download automatically when running step2_tracking.py
-# Or manually download:
+# Auto-downloads on first run, or manually:
+cd models/
 wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt
 ```
 
 #### OSNet Re-ID Model
-```bash
-# Download from MODEL_ZOO repo
-# Place in project root directory
+
+**Market-1501 pretrained (recommended)**
+- **Download**: [Google Drive Link](https://drive.google.com/file/d/1LaG1EJpHrxdAxKnSCJ_i0u-nbxSAeiFY/view)
+- **Filename**: `osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth`
+- **Size**: ~2.2M parameters
+- **Performance**: 94.8% mAP on Market-1501
+
+Place downloaded models in `models/` directory:
+```
+models/
+├── yolov8n.pt
+└── osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth
 ```
 
-**Option 1: Market-1501 pretrained (recommended)**
-- Download: [osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO)
-- Size: ~2.2M parameters
-- Performance: 94.8% mAP on Market-1501
+See `models/README.md` for more details.
 
-**Option 2: Use your own weights**
-- Train with FastReID: https://github.com/JDAI-CV/fast-reid
-- Or use any compatible OSNet weights
+## � Project Structure
 
-Place the `.pth` file in the project root:
 ```
 mtmc-tracking/
-├── osnet_x1_0_market_256x128_amsgrad_ep150_stp60_lr0.0015_b64_fb10_softmax_labelsmooth_flip.pth
-├── yolov8n.pt
-└── ...
+├── configs/                      # Configuration files
+│   └── botsort_config.yaml      # BoT-SORT tracker config
+├── scripts/                      # Main processing scripts
+│   ├── step1_detection.py       # Object detection (optional)
+│   ├── step2_tracking.py        # Single-camera tracking
+│   ├── step3_reid_extraction.py # Re-ID feature extraction
+│   └── step4_association.py     # Inter-camera association
+├── pipeline/                     # Automated pipeline runners
+│   ├── run_mtmc.py             # Main pipeline script
+│   ├── run_mtmc.bat            # Windows batch script
+│   └── run_mtmc.sh             # Linux/Mac shell script
+├── tools/                        # Utility tools
+│   ├── check_environment.py     # Verify installation
+│   ├── visualize_features.py    # Visualize Re-ID features
+│   └── simulate_multicam.py     # Split video for testing
+├── docs/                         # Documentation
+│   ├── SETUP_GUIDE.md          # Detailed setup instructions
+│   ├── GIT_PUSH_GUIDE.md       # Git workflow guide
+│   └── guides/                  # Step-by-step guides
+│       ├── step1_detection.md
+│       ├── step2_tracking.md
+│       ├── step3_reid.md
+│       └── step4_association.md
+├── models/                       # Model weights (gitignored)
+│   ├── yolov8n.pt              # Detection model
+│   └── osnet_market.pth        # Re-ID model
+├── data/                         # Input videos (gitignored)
+│   ├── camera1.mp4
+│   └── camera2.mp4
+├── outputs/                      # Results (gitignored)
+│   ├── camera1_tracking/
+│   ├── camera1_features/
+│   └── mtmc_results/
+├── .gitignore
+├── LICENSE
+├── README.md                     # This file
+└── requirements.txt
 ```
 
 ## 📖 Usage
@@ -94,9 +133,9 @@ mtmc-tracking/
 ### Quick Start (Full Pipeline)
 
 ```bash
-python run_full_mtmc_pipeline.py \
-    --videos video1.mp4 video2.mp4 video3.mp4 \
-    --camera-names cam1 cam2 cam3 \
+python pipeline/run_mtmc.py \
+    --videos data/camera1.mp4 data/camera2.mp4 \
+    --camera-names cam1 cam2 \
     --device 0 \
     --method hungarian \
     --similarity-threshold 0.6
@@ -106,35 +145,37 @@ python run_full_mtmc_pipeline.py \
 
 #### Step 1: Object Detection (Optional)
 ```bash
-python step1_object_detection.py \
-    --source video.mp4 \
-    --output-dir runs/detection \
+python scripts/step1_detection.py \
+    --source data/video.mp4 \
+    --output-dir outputs/detection \
     --save-txt \
     --device 0
 ```
 
 #### Step 2: Single-Camera Tracking
 ```bash
-python step2_tracking.py \
-    --source video.mp4 \
-    --output-dir runs/tracking \
-    --device 0
+python scripts/step2_tracking.py \
+    --source data/video.mp4 \
+    --project outputs \
+    --name tracking \
+    --device 0 \
+    --save-txt
 ```
 
 #### Step 3: Re-ID Feature Extraction
 ```bash
-python step3_reid_extraction.py \
-    --source video.mp4 \
-    --tracks runs/tracking/exp/tracks/video.txt \
-    --output-dir runs/features \
+python scripts/step3_reid_extraction.py \
+    --source data/video.mp4 \
+    --tracks outputs/tracking/tracks/video.txt \
+    --output-dir outputs/features \
     --device 0 \
     --max-crops-per-track 10
 ```
 
 #### Step 4: Inter-Camera Association
 ```bash
-python step4_inter_camera_association.py \
-    --features runs/cam1_features/track_features.pkl runs/cam2_features/track_features.pkl \
+python scripts/step4_association.py \
+    --features outputs/cam1_features/track_features.pkl outputs/cam2_features/track_features.pkl \
     --camera-names cam1 cam2 \
     --method hungarian \
     --similarity-threshold 0.6 \

@@ -219,7 +219,6 @@ def assign_global_ids(matches=None, clusters=None, all_tracks=None):
     if matches is not None:
         # Hungarian method: pairwise matches
         # Build connected components
-        from collections import defaultdict
         graph = defaultdict(set)
         
         for match in matches:
